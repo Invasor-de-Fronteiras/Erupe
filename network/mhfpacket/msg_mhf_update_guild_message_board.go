@@ -1,18 +1,18 @@
 package mhfpacket
 
 import (
- "errors"
+	"errors"
 
- 	"github.com/Solenataris/Erupe/network/clientctx"
-	"github.com/Solenataris/Erupe/network"
 	"github.com/Andoryuuta/byteframe"
+	"github.com/Solenataris/Erupe/network"
+	"github.com/Solenataris/Erupe/network/clientctx"
 )
 
 // MsgMhfUpdateGuildMessageBoard represents the MSG_MHF_UPDATE_GUILD_MESSAGE_BOARD
 type MsgMhfUpdateGuildMessageBoard struct {
 	AckHandle uint32
-  MessageOp uint32
-  Request []byte
+	MessageOp uint32
+	Request   []byte
 }
 
 // Opcode returns the ID associated with this packet type.
@@ -22,12 +22,13 @@ func (m *MsgMhfUpdateGuildMessageBoard) Opcode() network.PacketID {
 
 // Parse parses the packet from binary
 func (m *MsgMhfUpdateGuildMessageBoard) Parse(bf *byteframe.ByteFrame, ctx *clientctx.ClientContext) error {
-  m.AckHandle = bf.ReadUint32()
-  m.MessageOp = bf.ReadUint32()
-  if m.MessageOp != 5 {
-    m.Request = bf.DataFromCurrent()
-    bf.Seek(int64(len(bf.Data()) - 2), 0)
-  }
+	m.AckHandle = bf.ReadUint32()
+	m.MessageOp = bf.ReadUint32()
+	if m.MessageOp != 5 {
+		m.Request = bf.DataFromCurrent()
+		_, err := bf.Seek(int64(len(bf.Data())-2), 0)
+		return err
+	}
 	return nil
 }
 

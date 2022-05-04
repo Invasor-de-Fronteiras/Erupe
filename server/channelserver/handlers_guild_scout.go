@@ -5,9 +5,9 @@ import (
 	"io"
 	"time"
 
+	"github.com/Andoryuuta/byteframe"
 	"github.com/Solenataris/Erupe/common/stringsupport"
 	"github.com/Solenataris/Erupe/network/mhfpacket"
-	"github.com/Andoryuuta/byteframe"
 	"go.uber.org/zap"
 )
 

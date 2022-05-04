@@ -27,8 +27,20 @@ func cleanDB(db *sqlx.DB) {
 }
 
 func main() {
-	zapLogger, _ := zap.NewDevelopment()
-	defer zapLogger.Sync()
+	zapLogger, err := zap.NewDevelopment()
+
+	if err != nil {
+		fmt.Println("Failed to new development zap", err)
+		os.Exit(1)
+	}
+
+	err = zapLogger.Sync()
+
+	if err != nil {
+		fmt.Println("Failed to load zap", err)
+		os.Exit(1)
+	}
+
 	logger := zapLogger.Named("main")
 
 	logger.Info("Starting Erupe")

@@ -115,7 +115,11 @@ func (s *Server) handleEntranceServerConnection(conn net.Conn) {
 	if len(pkt) > 5 {
 		data = append(data, makeUsrResp(pkt)...)
 	}
-	cc.SendPacket(data)
+	err = cc.SendPacket(data)
+	if err != nil {
+		s.logger.Warn("Error sending packet", zap.Error(err))
+	}
+
 	// Close because we only need to send the response once.
 	// Any further requests from the client will come from a new connection.
 	conn.Close()

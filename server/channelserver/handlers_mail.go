@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/Andoryuuta/byteframe"
 	"github.com/Solenataris/Erupe/common/stringsupport"
 	"github.com/Solenataris/Erupe/network/binpacket"
 	"github.com/Solenataris/Erupe/network/mhfpacket"
-	"github.com/Andoryuuta/byteframe"
 	"go.uber.org/zap"
 )
 
@@ -316,8 +316,8 @@ func handleMsgMhfListMail(s *Session, p mhfpacket.MHFPacket) {
 
 		msg.WriteUint8(flags)
 		msg.WriteBool(itemAttached)
-		msg.WriteUint8(uint8(len(subjectBytes)+1))
-		msg.WriteUint8(uint8(len(senderNameBytes)+1))
+		msg.WriteUint8(uint8(len(subjectBytes) + 1))
+		msg.WriteUint8(uint8(len(senderNameBytes) + 1))
 		msg.WriteNullTerminatedBytes(subjectBytes)
 		msg.WriteNullTerminatedBytes(senderNameBytes)
 

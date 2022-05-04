@@ -6,8 +6,8 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Solenataris/Erupe/network"
 	"github.com/Andoryuuta/byteframe"
+	"github.com/Solenataris/Erupe/network"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -87,8 +87,8 @@ func (s *Session) handleDSGNRequest(bf *byteframe.ByteFrame) error {
 
 	newCharaReq := false
 
-	if reqUsername[len(reqUsername) - 1] == 43 { // '+'
-		reqUsername = reqUsername[:len(reqUsername) - 1]
+	if reqUsername[len(reqUsername)-1] == 43 { // '+'
+		reqUsername = reqUsername[:len(reqUsername)-1]
 		newCharaReq = true
 	}
 
@@ -102,8 +102,10 @@ func (s *Session) handleDSGNRequest(bf *byteframe.ByteFrame) error {
 	switch {
 	case err == sql.ErrNoRows:
 		s.logger.Info("Account not found", zap.String("reqUsername", reqUsername))
-		serverRespBytes = makeSignInFailureResp(SIGN_EAUTH)
+		// this is not being used
+		// serverRespBytes = makeSignInFailureResp(SIGN_EAUTH)
 
+		//TODO: Create pages separate from the sign in page.
 		// HACK(Andoryuuta): Create a new account if it doesn't exit.
 		s.logger.Info("Creating account", zap.String("reqUsername", reqUsername), zap.String("reqPassword", reqPassword))
 		err = s.server.registerDBAccount(reqUsername, reqPassword)

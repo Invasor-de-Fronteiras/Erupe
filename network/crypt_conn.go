@@ -115,8 +115,15 @@ func (cc *CryptConn) SendPacket(data []byte) error {
 		return err
 	}
 
-	cc.conn.Write(headerBytes)
-	cc.conn.Write(encData)
+	_, err = cc.conn.Write(headerBytes)
+	if err != nil {
+		return err
+	}
+
+	_, err = cc.conn.Write(encData)
+	if err != nil {
+		return err
+	}
 
 	cc.sentPackets++
 	cc.prevSendPacketCombinedCheck = combinedCheck

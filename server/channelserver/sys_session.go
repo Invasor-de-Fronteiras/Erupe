@@ -64,7 +64,7 @@ func NewSession(server *Server, conn net.Conn) *Session {
 				Encoding: japanese.ShiftJIS,
 			},
 		},
-		sessionStart: Time_Current_Adjusted().Unix(),
+		sessionStart:   Time_Current_Adjusted().Unix(),
 		stageMoveStack: stringstack.New(),
 	}
 	return s
@@ -140,7 +140,10 @@ func (s *Session) sendLoop() {
 		// Append the MSG_SYS_END tailing opcode.
 		terminatedPacket = append(terminatedPacket, []byte{0x00, 0x10}...)
 
-		s.cryptConn.SendPacket(terminatedPacket)
+		err := s.cryptConn.SendPacket(terminatedPacket)
+		if err != nil {
+			s.logger.Error("Error sending packet", zap.Error(err))
+		}
 	}
 }
 

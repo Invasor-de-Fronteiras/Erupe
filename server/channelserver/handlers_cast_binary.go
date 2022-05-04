@@ -2,8 +2,8 @@ package channelserver
 
 import (
 	"fmt"
-	"strings"
 	"math"
+	"strings"
 
 	"github.com/Andoryuuta/byteframe"
 	"github.com/Solenataris/Erupe/network/binpacket"
@@ -52,14 +52,14 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 	pkt := p.(*mhfpacket.MsgSysCastBinary)
 
 	if pkt.BroadcastType == 0x03 && pkt.MessageType == 0x03 && len(pkt.RawDataPayload) == 0x10 {
-    tmp := byteframe.NewByteFrameFromBytes(pkt.RawDataPayload)
+		tmp := byteframe.NewByteFrameFromBytes(pkt.RawDataPayload)
 		if tmp.ReadUint16() == 0x0002 && tmp.ReadUint8() == 0x18 {
-      _ = tmp.ReadBytes(9)
-      tmp.SetLE()
-      frame := tmp.ReadUint32()
-      sendServerChatMessage(s, fmt.Sprintf("TIME : %d'%d.%03d (%dframe)", frame/30/60, frame/30%60, int(math.Round(float64(frame%30*100)/3)), frame))
-    }
-  }
+			_ = tmp.ReadBytes(9)
+			tmp.SetLE()
+			frame := tmp.ReadUint32()
+			sendServerChatMessage(s, fmt.Sprintf("TIME : %d'%d.%03d (%dframe)", frame/30/60, frame/30%60, int(math.Round(float64(frame%30*100)/3)), frame))
+		}
+	}
 
 	// Parse out the real casted binary payload
 	var realPayload []byte
@@ -146,13 +146,13 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 					err := row.Scan(&raviPosted, &raviStarted)
 					if err != nil {
 						panic(err)
-						return
+
 					}
 					if raviStarted == 0 {
-						sendServerChatMessage(s, fmt.Sprintf("Raviente will start in less than 10 seconds"))
+						sendServerChatMessage(s, ("Raviente will start in less than 10 seconds"))
 						s.server.db.Exec("UPDATE raviregister SET ravistarted = $1", raviPosted)
 					} else {
-						sendServerChatMessage(s, fmt.Sprintf("Raviente has already started"))
+						sendServerChatMessage(s, ("Raviente has already started"))
 					}
 				}
 				if strings.HasPrefix(chatMessage.Message, "!bressend") {
@@ -161,13 +161,13 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 					err := row.Scan(&berserkRes)
 					if err != nil {
 						panic(err)
-						return
+
 					}
 					if berserkRes > 0 {
-						sendServerChatMessage(s, fmt.Sprintf("Sending ressurection support"))
+						sendServerChatMessage(s, ("Sending ressurection support"))
 						s.server.db.Exec("UPDATE ravistate SET unknown20 = $1", 0)
 					} else {
-						sendServerChatMessage(s, fmt.Sprintf("Ressurection support has not been requested"))
+						sendServerChatMessage(s, ("Ressurection support has not been requested"))
 					}
 				}
 				if strings.HasPrefix(chatMessage.Message, "!bsedsend") {
@@ -176,16 +176,16 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 					hperr := hprow.Scan(&phase1HP, &phase2HP, &phase3HP, &phase4HP, &phase5HP)
 					if hperr != nil {
 						panic(hperr)
-						return
+
 					}
 					row := s.server.db.QueryRow("SELECT support2 FROM ravisupport WHERE refid = 25")
 					var berserkTranq uint32
 					err := row.Scan(&berserkTranq)
 					if err != nil {
 						panic(err)
-						return
+
 					}
-					sendServerChatMessage(s, fmt.Sprintf("Sending sedation support if requested"))
+					sendServerChatMessage(s, ("Sending sedation support if requested"))
 					s.server.db.Exec("UPDATE ravisupport SET support2 = $1", (phase1HP + phase2HP + phase3HP + phase4HP + phase5HP))
 				}
 				if strings.HasPrefix(chatMessage.Message, "!bsedreq") {
@@ -194,16 +194,16 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 					hperr := hprow.Scan(&phase1HP, &phase2HP, &phase3HP, &phase4HP, &phase5HP)
 					if hperr != nil {
 						panic(hperr)
-						return
+
 					}
 					row := s.server.db.QueryRow("SELECT support2 FROM ravisupport WHERE refid = 25")
 					var berserkTranq uint32
 					err := row.Scan(&berserkTranq)
 					if err != nil {
 						panic(err)
-						return
+
 					}
-					sendServerChatMessage(s, fmt.Sprintf("Requesting sedation support"))
+					sendServerChatMessage(s, ("Requesting sedation support"))
 					s.server.db.Exec("UPDATE ravisupport SET support2 = $1", ((phase1HP + phase2HP + phase3HP + phase4HP + phase5HP) + 12))
 				}
 				if strings.HasPrefix(chatMessage.Message, "!setmultiplier ") {
@@ -214,20 +214,20 @@ func handleMsgSysCastBinary(s *Session, p mhfpacket.MHFPacket) {
 					err := row.Scan(&damageMultiplier)
 					if err != nil {
 						panic(err)
-						return
+
 					}
 					if numerr != nil || n != 1 {
-						sendServerChatMessage(s, fmt.Sprintf("Please use the format !setmultiplier x"))
+						sendServerChatMessage(s, ("Please use the format !setmultiplier x"))
 					} else if damageMultiplier == 1 {
 						if num > 20 {
-							sendServerChatMessage(s, fmt.Sprintf("Max multiplier for Ravi is 20, setting to this value"))
+							sendServerChatMessage(s, ("Max multiplier for Ravi is 20, setting to this value"))
 							s.server.db.Exec("UPDATE ravistate SET damagemultiplier = $1", 20)
 						} else {
 							sendServerChatMessage(s, fmt.Sprintf("Setting Ravi damage multiplier to %d", num))
 							s.server.db.Exec("UPDATE ravistate SET damagemultiplier = $1", num)
 						}
 					} else {
-						sendServerChatMessage(s, fmt.Sprintf("Multiplier can only be set once, please restart Ravi to set again"))
+						sendServerChatMessage(s, ("Multiplier can only be set once, please restart Ravi to set again"))
 					}
 				}
 				if strings.HasPrefix(chatMessage.Message, "!checkmultiplier") {

@@ -15,31 +15,31 @@ func handleMsgSysDeleteSemaphore(s *Session, p mhfpacket.MHFPacket) {
 	pkt := p.(*mhfpacket.MsgSysDeleteSemaphore)
 	sem := pkt.AckHandle
 	if s.server.semaphore != nil {
-	s.server.semaphoreLock.Lock()
-	for id := range s.server.semaphore {
-		switch sem {
+		s.server.semaphoreLock.Lock()
+		for id := range s.server.semaphore {
+			switch sem {
 			case 917533:
 				if s.server.semaphore[id].id_semaphore == "hs_l0u3B51J9k3" {
-				delete(s.server.semaphore["hs_l0u3B51J9k3"].reservedClientSlots, s.charID)
-				delete(s.server.semaphore["hs_l0u3B51J9k3"].clients, s)
+					delete(s.server.semaphore["hs_l0u3B51J9k3"].reservedClientSlots, s.charID)
+					delete(s.server.semaphore["hs_l0u3B51J9k3"].clients, s)
 				}
 			case 851997:
 				if s.server.semaphore[id].id_semaphore == "hs_l0u3B51J9k4" {
-				delete(s.server.semaphore["hs_l0u3B51J9k4"].reservedClientSlots, s.charID)
+					delete(s.server.semaphore["hs_l0u3B51J9k4"].reservedClientSlots, s.charID)
 				}
 			case 786461:
 				if s.server.semaphore[id].id_semaphore == "hs_l0u3B51J9k5" {
-				delete(s.server.semaphore["hs_l0u3B51J9k5"].reservedClientSlots, s.charID)
+					delete(s.server.semaphore["hs_l0u3B51J9k5"].reservedClientSlots, s.charID)
 				}
 			default:
 				if len(s.server.semaphore[id].reservedClientSlots) != 0 {
-				if s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k3" && s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k4" && s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k5" {
-					delete(s.server.semaphore[id].reservedClientSlots, s.charID)
+					if s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k3" && s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k4" && s.server.semaphore[id].id_semaphore != "hs_l0u3B51J9k5" {
+						delete(s.server.semaphore[id].reservedClientSlots, s.charID)
 					}
 				}
 			}
 		}
-	s.server.semaphoreLock.Unlock()
+		s.server.semaphoreLock.Unlock()
 	}
 }
 
@@ -71,7 +71,7 @@ func handleMsgSysCreateAcquireSemaphore(s *Session, p mhfpacket.MHFPacket) {
 		s.logger.Info("IS ALREADY EXIST !")
 		doAckSimpleSucceed(s, pkt.AckHandle, []byte{0x00, 0x0F, 0x00, 0x1D})
 	} else if uint16(len(newSemaphore.reservedClientSlots)) < newSemaphore.maxPlayers {
-	switch SemaphoreID {
+		switch SemaphoreID {
 		case "hs_l0u3B51J9k3":
 			newSemaphore.reservedClientSlots[s.charID] = nil
 			newSemaphore.clients[s] = s.charID

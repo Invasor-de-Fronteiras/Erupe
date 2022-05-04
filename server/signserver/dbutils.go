@@ -74,15 +74,15 @@ func (s *Server) registerDBAccount(username string, password string) error {
 }
 
 type character struct {
-	ID              uint32 `db:"id"`
-	IsFemale        bool   `db:"is_female"`
-	IsNewCharacter  bool   `db:"is_new_character"`
-	Name            string `db:"name"`
-	UnkDescString   string `db:"unk_desc_string"`
-	HRP             uint16 `db:"hrp"`
-	GR              uint16 `db:"gr"`
-	WeaponType      uint16 `db:"weapon_type"`
-	LastLogin       uint32 `db:"last_login"`
+	ID             uint32 `db:"id"`
+	IsFemale       bool   `db:"is_female"`
+	IsNewCharacter bool   `db:"is_new_character"`
+	Name           string `db:"name"`
+	UnkDescString  string `db:"unk_desc_string"`
+	HRP            uint16 `db:"hrp"`
+	GR             uint16 `db:"gr"`
+	WeaponType     uint16 `db:"weapon_type"`
+	LastLogin      uint32 `db:"last_login"`
 }
 
 func (s *Server) getCharactersForUser(uid int) ([]character, error) {

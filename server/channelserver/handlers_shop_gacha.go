@@ -5,8 +5,8 @@ import (
 	"time"
 
 	//"github.com/Solenataris/Erupe/common/stringsupport"
-	"github.com/Solenataris/Erupe/network/mhfpacket"
 	"github.com/Andoryuuta/byteframe"
+	"github.com/Solenataris/Erupe/network/mhfpacket"
 	"github.com/lib/pq"
 	"github.com/sachaos/lottery"
 	"go.uber.org/zap"
@@ -149,7 +149,7 @@ func handleMsgMhfEnumerateShop(s *Session, p mhfpacket.MHFPacket) {
 		} else {
 			doAckBufSucceed(s, pkt.AckHandle, []byte{0x00, 0x00, 0x00, 0x00})
 		}
-         } else {
+	} else {
 		shopEntries, err := s.server.db.Query("SELECT itemhash,itemID,Points,TradeQuantity,rankReqLow,rankReqHigh,rankReqG,storeLevelReq,maximumQuantity,boughtQuantity,roadFloorsRequired,weeklyFatalisKills FROM normal_shop_items WHERE shoptype=$1 AND shopid=$2", pkt.ShopType, pkt.ShopID)
 		if err != nil {
 			panic(err)

@@ -208,6 +208,9 @@ func logoutPlayer(s *Session) {
 
 	var timePlayed int
 	err := s.server.db.QueryRow("SELECT time_played FROM characters WHERE id = $1", s.charID).Scan(&timePlayed)
+	if err != nil {
+		panic(err)
+	}
 
 	timePlayed = (int(Time_Current_Adjusted().Unix()) - int(s.sessionStart)) + timePlayed
 
@@ -232,6 +235,10 @@ func logoutPlayer(s *Session) {
 	}
 	saveData.RP += uint16(rpGained)
 	transaction, err := s.server.db.Begin()
+	if err != nil {
+		panic(err)
+	}
+
 	err = saveData.Save(s, transaction)
 	if err != nil {
 		transaction.Rollback()
@@ -593,6 +600,7 @@ func handleMsgMhfEnumerateGuacot(s *Session, p mhfpacket.MHFPacket) {
 		var gook3status bool
 		var gook4status bool
 		var gook5status bool
+		// TODO: Create only one query for all this
 		_ = s.server.db.QueryRow("SELECT gook0 FROM gook WHERE id = $1", s.charID).Scan(&gook0)
 		_ = s.server.db.QueryRow("SELECT gook1 FROM gook WHERE id = $1", s.charID).Scan(&gook1)
 		_ = s.server.db.QueryRow("SELECT gook2 FROM gook WHERE id = $1", s.charID).Scan(&gook2)
@@ -605,27 +613,27 @@ func handleMsgMhfEnumerateGuacot(s *Session, p mhfpacket.MHFPacket) {
 		_ = s.server.db.QueryRow("SELECT gook3status FROM gook WHERE id = $1", s.charID).Scan(&gook3status)
 		_ = s.server.db.QueryRow("SELECT gook4status FROM gook WHERE id = $1", s.charID).Scan(&gook4status)
 		_ = s.server.db.QueryRow("SELECT gook5status FROM gook WHERE id = $1", s.charID).Scan(&gook5status)
-		if gook0status == true {
+		if gook0status {
 			count++
 			tempresp.WriteBytes(gook0)
 		}
-		if gook1status == true {
+		if gook1status {
 			count++
 			tempresp.WriteBytes(gook1)
 		}
-		if gook2status == true {
+		if gook2status {
 			count++
 			tempresp.WriteBytes(gook2)
 		}
-		if gook3status == true {
+		if gook3status {
 			count++
 			tempresp.WriteBytes(gook3)
 		}
-		if gook4status == true {
+		if gook4status {
 			count++
 			tempresp.WriteBytes(gook4)
 		}
-		if gook5status == true {
+		if gook5status {
 			count++
 			tempresp.WriteBytes(gook5)
 		}

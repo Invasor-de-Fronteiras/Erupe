@@ -1,6 +1,16 @@
 {
     "cSpell.words": [
+        "Andoryuuta",
+        "bfutil",
+        "Erupe",
         "golangci",
-        "somedir"
-    ]
+        "mhfpacket",
+        "Solenataris",
+        "somedir",
+        "sqlx"
+    ],
+    "go.lintTool":"golangci-lint",
+    "go.lintFlags": [
+        "--fast"
+    ],
 }

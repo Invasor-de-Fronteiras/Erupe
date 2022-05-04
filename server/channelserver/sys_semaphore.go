@@ -40,7 +40,6 @@ func (s *Semaphore) BroadcastRavi(pkt mhfpacket.MHFPacket) {
 	// Broadcast the data.
 	for session := range s.clients {
 
-
 		// Make the header
 		bf := byteframe.NewByteFrame()
 		bf.WriteUint16(uint16(pkt.Opcode()))
@@ -66,7 +65,10 @@ func (s *Semaphore) BroadcastMHF(pkt mhfpacket.MHFPacket, ignoredSession *Sessio
 		bf.WriteUint16(uint16(pkt.Opcode()))
 
 		// Build the packet onto the byteframe.
-		pkt.Build(bf, session.clientContext)
+		err := pkt.Build(bf, session.clientContext)
+		if err != nil {
+			session.logger.Error("Error building packet")
+		}
 
 		// Enqueue in a non-blocking way that drops the packet if the connections send buffer channel is full.
 		session.QueueSendNonBlocking(bf.Data())
