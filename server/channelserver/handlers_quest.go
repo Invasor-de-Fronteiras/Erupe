@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Solenataris/Erupe/network/mhfpacket"
 	"github.com/Andoryuuta/byteframe"
+	"github.com/Solenataris/Erupe/network/mhfpacket"
 )
 
 func handleMsgSysGetFile(s *Session, p mhfpacket.MHFPacket) {
@@ -32,7 +32,15 @@ func handleMsgSysGetFile(s *Session, p mhfpacket.MHFPacket) {
 			doAckBufSucceed(s, pkt.AckHandle, data)
 		} else {
 			// Get quest file.
-			data, err := ioutil.ReadFile(filepath.Join(s.server.erupeConfig.BinPath, fmt.Sprintf("quests/%s.bin", pkt.Filename)))
+			// data, err := ioutil.ReadFile(filepath.Join(s.server.erupeConfig.BinPath, fmt.Sprintf("quests/%s.bin", pkt.Filename)))
+			// quest_type := strings.(pkt.Filename, "")
+			// day := []rune(pkt.Filename)[5:6]
+			// season := []rune(pkt.Filename)[6]
+
+			questType := string([]rune(pkt.Filename)[5:7])
+			questname := fmt.Sprintf("quests-dev/21085%s.bin", questType)
+			s.logger.Info(fmt.Sprintf("\n%s", questname))
+			data, err := ioutil.ReadFile(filepath.Join(s.server.erupeConfig.BinPath, questname))
 			if err != nil {
 				panic(err)
 			}
