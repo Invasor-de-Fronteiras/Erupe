@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Solenataris/Erupe/network/mhfpacket"
 	"github.com/Andoryuuta/byteframe"
+	"github.com/Solenataris/Erupe/network/mhfpacket"
 )
 
 func handleMsgSysGetFile(s *Session, p mhfpacket.MHFPacket) {
@@ -31,6 +31,8 @@ func handleMsgSysGetFile(s *Session, p mhfpacket.MHFPacket) {
 			}
 			doAckBufSucceed(s, pkt.AckHandle, data)
 		} else {
+			s.logger.Info(fmt.Sprintf("Started quest %s", pkt.Filename))
+
 			// Get quest file.
 			data, err := ioutil.ReadFile(filepath.Join(s.server.erupeConfig.BinPath, fmt.Sprintf("quests/%s.bin", pkt.Filename)))
 			if err != nil {
