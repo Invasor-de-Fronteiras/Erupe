@@ -759,7 +759,7 @@ func handleMsgMhfOperateGuild(s *Session, p mhfpacket.MHFPacket) {
 
 func handleRenamePugi(s *Session, data []byte, guild *Guild, num int) {
 	bf := byteframe.NewByteFrameFromBytes(data)
-	_ = bf.ReadUint8() // len
+	_ = bf.ReadUint8()  // len
 	_ = bf.ReadUint32() // unk
 	name, _ := stringsupport.ConvertSJISBytesToString(bf.ReadNullTerminatedBytes())
 	switch num {
@@ -951,21 +951,21 @@ func handleMsgMhfInfoGuild(s *Session, p mhfpacket.MHFPacket) {
 		if guild.PugiName1 == "" {
 			bf.WriteUint16(0x0100)
 		} else {
-			bf.WriteUint8(uint8(len(guild.PugiName1)+1))
+			bf.WriteUint8(uint8(len(guild.PugiName1) + 1))
 			pugiName := s.clientContext.StrConv.MustEncode(guild.PugiName1)
 			bf.WriteNullTerminatedBytes(pugiName)
 		}
 		if guild.PugiName2 == "" {
 			bf.WriteUint16(0x0100)
 		} else {
-			bf.WriteUint8(uint8(len(guild.PugiName2)+1))
+			bf.WriteUint8(uint8(len(guild.PugiName2) + 1))
 			pugiName := s.clientContext.StrConv.MustEncode(guild.PugiName2)
 			bf.WriteNullTerminatedBytes(pugiName)
 		}
 		if guild.PugiName3 == "" {
 			bf.WriteUint16(0x0100)
 		} else {
-			bf.WriteUint8(uint8(len(guild.PugiName3)+1))
+			bf.WriteUint8(uint8(len(guild.PugiName3) + 1))
 			pugiName := s.clientContext.StrConv.MustEncode(guild.PugiName3)
 			bf.WriteNullTerminatedBytes(pugiName)
 		}
@@ -1075,24 +1075,24 @@ func handleMsgMhfInfoGuild(s *Session, p mhfpacket.MHFPacket) {
 			bf.WriteUint32(0x05)
 			bf.WriteUint16(0x0032)
 			bf.WriteUint8(0x00)
-			bf.WriteUint16(uint16(len(applicantName)+1))
+			bf.WriteUint16(uint16(len(applicantName) + 1))
 			bf.WriteNullTerminatedBytes(applicantName)
 		}
 
 		bf.WriteUint16(0x0000)
 
 		/*
-		alliance application format
-		uint16 numapplicants (above)
+			alliance application format
+			uint16 numapplicants (above)
 
-		uint32 guild id
-		uint32 guild leader id (for mail)
-		uint32 unk (always null in pcap)
-		uint16 unk (always 0001 in pcap)
-		uint16 len guild name
-		string nullterm guild name
-		uint16 len guild leader name
-		string nullterm guild leader name
+			uint32 guild id
+			uint32 guild leader id (for mail)
+			uint32 unk (always null in pcap)
+			uint16 unk (always 0001 in pcap)
+			uint16 len guild name
+			string nullterm guild name
+			uint16 len guild leader name
+			string nullterm guild leader name
 		*/
 
 		if guild.Icon != nil {
@@ -1648,13 +1648,15 @@ func handleMsgMhfLoadGuildCooking(s *Session, p mhfpacket.MHFPacket) {
 	// uint32 expiration timestamp
 
 	// encourage food
-	data := []byte{0x00, 0x06,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0xc4, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x9c, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x52,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x07, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x01, 0x8b, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFD, 0x0B, 0x51,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x54, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
-		0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x03, 0xF3, 0xFC, 0x0B, 0x51}
+	data := []byte{0x00, 0x00}
+	// data := []byte{0x00, 0x01, 0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0xC4, 0x00, 0x00, 0x00, 0x03, 0x5F, 0xFC, 0x0B, 0x51}
+	// data := []byte{0x00, 0x06,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0xc4, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x9c, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x52,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x07, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x01, 0x8b, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFD, 0x0B, 0x51,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x02, 0x54, 0x00, 0x00, 0x00, 0x03, 0xFF, 0xFC, 0x0B, 0x51,
+	// 	0x0F, 0x51, 0x97, 0xFF, 0x00, 0x00, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x03, 0xF3, 0xFC, 0x0B, 0x51}
 	doAckBufSucceed(s, pkt.AckHandle, data)
 	//data := []byte{0x00, 0x01, 0x1C, 0x72, 0x54, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x5F, 0xF8, 0x2F, 0xE1}
 	//doAckBufSucceed(s, pkt.AckHandle, data)
@@ -1764,7 +1766,7 @@ func handleMsgMhfUpdateGuildMessageBoard(s *Session, p mhfpacket.MHFPacket) {
 	bf := byteframe.NewByteFrameFromBytes(pkt.Request)
 	guild, _ := GetGuildInfoByCharacterId(s, s.charID)
 	if guild == nil {
-		doAckSimpleFail(s, pkt.AckHandle, make([]byte, 4))
+		doAckSimpleSucceed(s, pkt.AckHandle, make([]byte, 4))
 		return
 	}
 	var titleConv, bodyConv string
@@ -1838,8 +1840,8 @@ func handleMsgMhfUpdateGuildMessageBoard(s *Session, p mhfpacket.MHFPacket) {
 				likedBySlice := strings.Split(likedBy, ",")
 				for i, e := range likedBySlice {
 					if e == strconv.Itoa(int(s.charID)) {
-						likedBySlice[i] = likedBySlice[len(likedBySlice) - 1]
-    				likedBySlice = likedBySlice[:len(likedBySlice) - 1]
+						likedBySlice[i] = likedBySlice[len(likedBySlice)-1]
+						likedBySlice = likedBySlice[:len(likedBySlice)-1]
 					}
 				}
 				likedBy = strings.Join(likedBySlice, ",")
